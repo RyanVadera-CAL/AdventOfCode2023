@@ -9,7 +9,7 @@ public class Day09 : ISolveProblems
         foreach (var line in lines)
         {
             var sequence = new Sequence(line);
-            cumSum += sequence.PredictNextValue();
+            cumSum += sequence.PredictPreviousValue();
         }
 
         return cumSum;

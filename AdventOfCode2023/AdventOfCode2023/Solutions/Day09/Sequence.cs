@@ -20,7 +20,16 @@ public class Sequence
 
         var deltaSequence = GenerateDeltaSequence();
 
-        return _sequenceValues.Last() + deltaSequence.PredictNextValue();;
+        return _sequenceValues.Last() + deltaSequence.PredictNextValue();
+    }
+
+    public int PredictPreviousValue()
+    {
+        if (_sequenceValues.All(n => n == 0)) return 0;
+        
+        var deltaSequence = GenerateDeltaSequence();
+
+        return _sequenceValues.First() - deltaSequence.PredictPreviousValue();
     }
 
     private Sequence GenerateDeltaSequence()
