@@ -1,7 +1,7 @@
 ﻿using AdventOfCode2023;
 
-var input = await File.ReadAllLinesAsync("input.txt");
+var adventSolver = new AdventSolver("input.txt");
 
-var solution = Day04.Solve_B(input);
+var solution = adventSolver.SolveForDay(7);
 
 Console.WriteLine(solution);
