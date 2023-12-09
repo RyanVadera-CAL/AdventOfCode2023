@@ -3,25 +3,23 @@ namespace AdventOfCode2023;
 public class Day06
 {
     private readonly string[] _lines;
-    private readonly IList<int> _times;
-    private readonly IList<int> _distances;
 
     public Day06(string[] lines)
     {
         _lines = lines;
-
-        _times = _lines[0].Split(':')[1].Split(' ').Where(x => !string.IsNullOrEmpty(x)).Select(int.Parse).ToList();
-        _distances = _lines[1].Split(':')[1].Split(' ').Where(x => !string.IsNullOrEmpty(x)).Select(int.Parse).ToList();
     }
 
     public int Solve_A()
     {
+        var times = _lines[0].Split(':')[1].Split(' ').Where(x => !string.IsNullOrEmpty(x)).Select(int.Parse).ToList();
+        var distances = _lines[1].Split(':')[1].Split(' ').Where(x => !string.IsNullOrEmpty(x)).Select(int.Parse).ToList();
+
         var cumSum = 1;
         
-        for (var i = 0; i < _times.Count; i++)
+        for (var i = 0; i < times.Count; i++)
         {
-            var time = _times[i];
-            var distance = _distances[i];
+            var time = times[i];
+            var distance = distances[i];
 
             var limits = ApplyQuadraticFormula(-1 * time, distance);
 
@@ -34,7 +32,31 @@ public class Day06
         return cumSum;
     }
 
-    private (double min, double max) ApplyQuadraticFormula(int b, int c)
+    public int Solve_B()
+    {
+        var time = long.Parse(
+            _lines[0]
+            .Split(':')[1]
+            .Split(' ')
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Aggregate("", (current, x) => current + x));
+        
+        var distance = long.Parse(
+            _lines[1]
+                .Split(':')[1]
+                .Split(' ')
+                .Where(x => !string.IsNullOrEmpty(x))
+                .Aggregate("", (current, x) => current + x));
+        
+        var limits = ApplyQuadraticFormula(-1 * time, distance);
+
+        var minHoldTime = (int) Math.Round(limits.min, MidpointRounding.ToPositiveInfinity);
+        var maxHoldTime = (int) Math.Round(limits.max, MidpointRounding.ToNegativeInfinity);
+
+        return maxHoldTime - minHoldTime + 1;
+    }
+
+    private (double min, double max) ApplyQuadraticFormula(long b, long c)
     {
         var adjustedC = c + 0.1;
         
