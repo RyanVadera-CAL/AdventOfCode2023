@@ -2,7 +2,7 @@ namespace AdventOfCode2023.Solutions.Day07;
 
 public class Day07 : ISolveProblems
 {
-    public int Solve(string[] lines)
+    public long Solve(string[] lines)
     {
         var hands = new List<(Hand Hand, int Bid)>();
         

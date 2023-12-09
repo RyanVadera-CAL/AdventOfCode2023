@@ -12,13 +12,13 @@ public class AdventSolver
         _inputLines = File.ReadAllLines(inputFilePath);
     }
     
-    public int SolveToday()
+    public long SolveToday()
     {
         var today = DateTime.Today;
         return SolveForDay(today.Day);
     }
     
-    public int SolveForDay(int day)
+    public long SolveForDay(int day)
     {
         var solver = GetSolver(day);
 
