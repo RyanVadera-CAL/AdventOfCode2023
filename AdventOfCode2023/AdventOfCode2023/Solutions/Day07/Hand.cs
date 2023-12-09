@@ -11,7 +11,7 @@ public class Hand
     {
         _cards = handInput.Select(CardAsInt).ToList();
         
-        HandTypeValue = GetHandTypeValue();
+        HandTypeValue = GetMaximiseHandType();
         CardsValue = HandAsString();
     }
 
@@ -32,6 +32,28 @@ public class Hand
         return new string(cardCounts.OrderByDescending( x => x).Select(x => (char)('A' + x)).ToArray());
     }
 
+    private string GetMaximiseHandType()
+    {
+        var cardCounts = new int[CardAsInt('A')];
+        
+        foreach (var card in _cards)
+        {
+            cardCounts[card - 1]++;
+        }
+
+        var numJokers = cardCounts[0];
+        var cardCountsList = cardCounts.ToList();
+        if (numJokers < _cards.Count)
+        {
+            cardCountsList[0] = 0;
+            
+            var i = cardCountsList.IndexOf(cardCountsList.Max());
+            cardCountsList[i] += numJokers;
+        }
+        
+        return new string(cardCountsList.OrderByDescending( x => x).Select(x => (char)('A' + x)).ToArray());
+    }
+
     private static int CardAsInt(char card)
     {
         return card switch
@@ -39,9 +61,9 @@ public class Hand
             'A' => 13,
             'K' => 12,
             'Q' => 11,
-            'J' => 10,
-            'T' => 9,
-            _ => card - '0' - 1
+            'T' => 10,
+            'J' => 1,
+            _ => card - '0'
         };
     }
 }
