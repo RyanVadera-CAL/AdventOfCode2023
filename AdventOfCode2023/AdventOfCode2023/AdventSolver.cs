@@ -36,6 +36,8 @@ public class AdventSolver
                 return new Day08();
             case 9:
                 return new Day09();
+            case 10:
+                return new Solutions.Day10.Day10();
             default:
                 throw new NotImplementedException();
         }
