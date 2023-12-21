@@ -4,13 +4,17 @@ public class GalaxyMap
 {
     private IList<string> Map { get; }
     private HashSet<(int Row, int Col)> GalaxyLocations { get; set; }
+
+    private HashSet<int> _expandedRows;
+    private HashSet<int> _expandedCols;
+    
+    private const long ExpansionAmount = 1000000;
     
     public GalaxyMap (string[] map)
     {
         Map = map.ToList();
         LocateGalaxies();
-        ApplyExpansionCorrection();
-        LocateGalaxies();
+        LocateExpandedAreas();
     }
     
     public long FindAllDistances()
@@ -41,6 +45,25 @@ public class GalaxyMap
                     GalaxyLocations.Add((y,x));
                 }
             }
+        }
+    }
+
+    private void LocateExpandedAreas()
+    {
+        var rows = GalaxyLocations.Select(l => l.Row).ToHashSet();
+        var cols = GalaxyLocations.Select(l => l.Col).ToHashSet();
+        
+        _expandedRows = new HashSet<int>();
+        _expandedCols = new HashSet<int>();
+        
+        for (var y = 0; y < Map.Count; y++)
+        {
+            if (!rows.Contains(y)) _expandedRows.Add(y);
+        }
+
+        for (var x = 0; x < Map[0].Length; x++)
+        {
+            if (!cols.Contains(x)) _expandedCols.Add(x);
         }
     }
 
@@ -88,7 +111,54 @@ public class GalaxyMap
 
     private long FindDistanceBetween((int Row, int Col) galaxy1, (int Row, int Col) galaxy2)
     {
-        return  Math.Abs(galaxy1.Row - galaxy2.Row) + Math.Abs(galaxy1.Col - galaxy2.Col);
+        var expandedRows = FindNumExpandedRowsBetween(galaxy1.Row, galaxy2.Row);
+        var expandedCols = FindNumExpandedColsBetween(galaxy1.Col, galaxy2.Col);
+
+        return Math.Abs(galaxy1.Row - galaxy2.Row) + Math.Abs(galaxy1.Col - galaxy2.Col) + ExpansionAmount * (expandedCols + expandedRows) - expandedRows - expandedCols;
+    }
+
+    private int FindNumExpandedRowsBetween(int rowA, int rowB)
+    {
+        var count = 0;
+        
+        if (rowB > rowA)
+        {
+            for (var i = rowA; i <= rowB; i++)
+            {
+                if (_expandedRows.Contains(i)) count++;
+            }
+        }
+        else
+        {
+            for (var i = rowB; i <= rowA; i++)
+            {
+                if (_expandedRows.Contains(i)) count++;
+            }
+        }
+
+        return count;
+    }
+    
+    private int FindNumExpandedColsBetween(int colA, int colB)
+    {
+        var count = 0;
+        
+        if (colB > colA)
+        {
+            for (var i = colA; i <= colB; i++)
+            {
+                if (_expandedCols.Contains(i)) count++;
+            }
+        }
+        else
+        {
+            for (var i = colB; i <= colA; i++)
+            {
+                if (_expandedCols.Contains(i)) count++;
+            }
+        }
+
+        return count;
     }
 
     private void PrintMap()
