@@ -1,6 +1,8 @@
 using AdventOfCode2023.Solutions.Day07;
 using AdventOfCode2023.Solutions.Day08;
 using AdventOfCode2023.Solutions.Day09;
+using AdventOfCode2023.Solutions.Day10;
+using AdventOfCode2023.Solutions.Day11;
 
 namespace AdventOfCode2023;
 
@@ -37,7 +39,9 @@ public class AdventSolver
             case 9:
                 return new Day09();
             case 10:
-                return new Solutions.Day10.Day10();
+                return new Day10();
+            case 11:
+                return new Day11();
             default:
                 throw new NotImplementedException();
         }
