@@ -54,25 +54,37 @@ public class MirrorFinder
         return false;
     }
 
-    private bool AreRowsEqual(int rowIndexA, int rowIndexB)
+    private bool AreRowsEqual(int rowIndexA, int rowIndexB, int strikes = 0)
     {
-        if (rowIndexA < 0 || rowIndexB >= _lines.Length) return true;
-
-
-        if (_lines[rowIndexA] != _lines[rowIndexB]) return false;
-        
-        return AreRowsEqual(rowIndexA - 1, rowIndexB + 1);
-    }
-
-    private bool AreColsEqual(int colIndexA, int colIndexB)
-    {
-        if (colIndexA < 0 || colIndexB >= _lines[0].Length) return true;
-
-        if (_lines.Any(line => line[colIndexA] != line[colIndexB]))
+        if (rowIndexA < 0 || rowIndexB >= _lines.Length)
         {
-            return false;
+            return strikes == 1;
         }
 
-        return AreColsEqual(colIndexA - 1, colIndexB + 1);
+        for (var i = 0; i < _lines[rowIndexA].Length; i++)
+        {
+            if (_lines[rowIndexA][i] == _lines[rowIndexB][i]) continue;
+            if (strikes > 0) return false;
+            strikes++;
+        }
+
+        return AreRowsEqual(rowIndexA - 1, rowIndexB + 1, strikes);
+    }
+
+    private bool AreColsEqual(int colIndexA, int colIndexB, int strikes = 0)
+    {
+        if (colIndexA < 0 || colIndexB >= _lines[0].Length)
+        {
+            return strikes == 1;
+        }
+
+        for (var i = 0; i < _lines.Length; i++)
+        {
+            if (_lines[i][colIndexA] == _lines[i][colIndexB]) continue;
+            if (strikes > 0) return false;
+            strikes++;
+        }
+
+        return AreColsEqual(colIndexA - 1, colIndexB + 1, strikes);
     }
 }
